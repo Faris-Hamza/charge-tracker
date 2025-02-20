@@ -149,6 +149,61 @@ class Database:
             print(f"Erreur lors de la création des tables: {str(e)}")
             raise
 
+
+# Create partners table -------------  added by hamza -------------
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS partners (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        share_percentage NUMERIC(5, 2) NOT NULL
+    )
+""")
+print("Table 'partners' créée ou déjà existante")
+
+
+# Create partner_payments table
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS partner_payments (
+        id SERIAL PRIMARY KEY,
+        partner_id INTEGER REFERENCES partners(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+        amount NUMERIC(15, 2) NOT NULL,
+        payment_date DATE DEFAULT CURRENT_DATE,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+""")
+print("Table 'partner_payments' créée ou déjà existante")
+
+# Create immobilisations table
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS immobilisations (
+        id SERIAL PRIMARY KEY,
+        nom VARCHAR(255) NOT NULL,
+        description TEXT,
+        prix_total NUMERIC(15, 2) NOT NULL,
+        date_acquisition DATE DEFAULT CURRENT_DATE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+""")
+print("Table 'immobilisations' créée ou déjà existante")
+
+
+# Create transactions_investissement table
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS transactions_investissement (
+        id SERIAL PRIMARY KEY,
+        associe_id INTEGER REFERENCES partners(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+        immobilisation_id INTEGER REFERENCES immobilisations(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+        montant NUMERIC(15, 2) NOT NULL,
+        date_transaction DATE DEFAULT CURRENT_DATE,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+""")
+print("Table 'transactions_investissement' créée ou déjà existante")
+
+# ---------- End section added by hamza ------- #
+
     def get_all_users(self):
         """Récupère tous les utilisateurs."""
         self.ensure_connection()
