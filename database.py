@@ -105,18 +105,21 @@ class Database:
                     END $$;
                 """)
                 
-                # Create transactions table with foreign key to projects
+                # Create transactions table with foreign key to categories
                 cur.execute("""
                     CREATE TABLE IF NOT EXISTS transactions (
                         id SERIAL PRIMARY KEY,
                         date DATE NOT NULL,
-                        montant DECIMAL(15,2) NOT NULL,
+                        montant NUMERIC(15, 2) NOT NULL,
                         libelle TEXT NOT NULL,
-                        category_id INTEGER REFERENCES categories(id),
+                        category_id INTEGER REFERENCES categories(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
                         type TEXT CHECK (type IN ('charge', 'recette')) NOT NULL,
-                        project TEXT REFERENCES projects(name) ON UPDATE CASCADE,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        project TEXT,
+                        is_paid BOOLEAN DEFAULT FALSE,
+                        paid BOOLEAN DEFAULT TRUE,
                         payer BOOLEAN DEFAULT FALSE,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        payment_date DATE
                     )
                 """)
 
