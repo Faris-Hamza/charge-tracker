@@ -145,11 +145,6 @@ class Database:
                 """)
                 print("Tables créées ou mises à jour avec succès")
 
-        except Exception as e:
-            print(f"Erreur lors de la création des tables: {str(e)}")
-            raise
-
-
 # Create partners table -------------  added by hamza -------------
 cur.execute("""
     CREATE TABLE IF NOT EXISTS partners (
@@ -203,6 +198,11 @@ cur.execute("""
 print("Table 'transactions_investissement' créée ou déjà existante")
 
 # ---------- End section added by hamza ------- #
+
+        except Exception as e:
+            print(f"Erreur lors de la création des tables: {str(e)}")
+            raise
+
 
     def get_all_users(self):
         """Récupère tous les utilisateurs."""
