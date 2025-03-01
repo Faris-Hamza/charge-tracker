@@ -292,9 +292,10 @@ def main():
                     xaxis_title="Projet",
                     yaxis_title="Montant (DH)",
                     height=400
+                    width=800
                 )
                 
-                st.plotly_chart(fig_projects, use_container_width=True)
+                st.plotly_chart(fig_projects, use_container_width=False)
 
 
             # Detailed project metrics
