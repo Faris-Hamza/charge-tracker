@@ -255,7 +255,8 @@ def main():
                     mime="application/pdf",
                 )
 
-                # ترتيب المشاريع حسب الترتيب الأصلي من قاعدة البيانات
+
+                            # ترتيب المشاريع حسب الترتيب الأصلي من قاعدة البيانات
                 ordered_projects = df_project_summary['project'].unique()
                 
                 # Group data properly
