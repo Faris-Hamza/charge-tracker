@@ -255,36 +255,47 @@ def main():
                     mime="application/pdf",
                 )
 
-            # Create a bar chart for projects
-            fig_projects = go.Figure()
+                # ترتيب المشاريع حسب الترتيب الأصلي من قاعدة البيانات
+                ordered_projects = df_project_summary['project'].unique()
+                
+                # Group data properly
+                df_grouped = df_project_summary.groupby('project', as_index=False).sum()
+                
+                # تأكد أن المشاريع مرتبة بنفس ترتيب قاعدة البيانات
+                df_grouped['project'] = pd.Categorical(df_grouped['project'], categories=ordered_projects, ordered=True)
+                df_grouped = df_grouped.sort_values('project')
+                
+                # Create a bar chart for projects
+                fig_projects = go.Figure()
+                
+                # Add bars for charges
+                fig_projects.add_trace(go.Bar(
+                    name='Charges',
+                    x=df_grouped['project'],
+                    y=df_grouped['charges'],
+                    marker_color='red',
+                    opacity=0.7
+                ))
+                
+                # Add bars for recettes
+                fig_projects.add_trace(go.Bar(
+                    name='Recettes',
+                    x=df_grouped['project'],
+                    y=df_grouped['recettes'],
+                    marker_color='green',
+                    opacity=0.7
+                ))
+                
+                fig_projects.update_layout(
+                    barmode='group',
+                    title="Répartition par Projet",
+                    xaxis_title="Projet",
+                    yaxis_title="Montant (DH)",
+                    height=400
+                )
+                
+                st.plotly_chart(fig_projects, use_container_width=True)
 
-            # Add bars for charges
-            fig_projects.add_trace(go.Bar(
-                name='Charges',
-                x=df_project_summary['project'].unique(),
-                y=df_project_summary.groupby('project')['charges'].sum(),
-                marker_color='red',
-                opacity=0.7
-            ))
-
-            # Add bars for recettes
-            fig_projects.add_trace(go.Bar(
-                name='Recettes',
-                x=df_project_summary['project'].unique(),
-                y=df_project_summary.groupby('project')['recettes'].sum(),
-                marker_color='green',
-                opacity=0.7
-            ))
-
-            fig_projects.update_layout(
-                barmode='group',
-                title=f"Répartition par Projet",
-                xaxis_title="Projet",
-                yaxis_title="Montant (DH)",
-                height=400
-            )
-
-            st.plotly_chart(fig_projects, use_container_width=True)
 
             # Detailed project metrics
             for idx, row in df_project_summary.groupby('project').agg({
