@@ -291,7 +291,7 @@ def main():
                     title="Répartition par Projet",
                     xaxis_title="Projet",
                     yaxis_title="Montant (DH)",
-                    height=400
+                    height=400,
                     width=800
                 )
                 
